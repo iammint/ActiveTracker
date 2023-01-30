@@ -54,25 +54,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { supabase } from "../supabase/init"
-const data = ref([])
-const dataLoaded = ref(null)
-
+import { ref } from "vue";
+import { supabase } from "../supabase/init";
+const data = ref([]);
+const dataLoaded = ref(null);
 // Get data
 const getData = async () => {
   try {
     const { data: workouts, error } = await supabase
       .from("workouts")
-      .select("*")
-    if (error) throw error
-    data.value = workouts
-    // console.log(data.value)
-    dataLoaded.value = true
+      .select("*");
+    if (error) throw error;
+    data.value = workouts;
+    dataLoaded.value = true;
   } catch (error) {
-    console.warn(error.message)
+    console.warn(error.message);
   }
-}
+};
 // Run data function
-getData()
+getData();
 </script>
