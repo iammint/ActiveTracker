@@ -39,6 +39,18 @@
               alt=""
             />
           </div>
+          <div
+            @click="shareWorkout('QQ')"
+            class="h-7 w-7 rounded-full flex justify-center items-center cursor-pointer bg-at-light-green shadow-lg"
+          >
+            <img class="h-3.5 w-auto" src="../assets/images/QQ.png" alt="" />
+          </div>
+          <div
+            @click="shareWorkout('sina')"
+            class="h-7 w-7 rounded-full flex justify-center items-center cursor-pointer bg-at-light-green shadow-lg"
+          >
+            <img class="h-3.5 w-auto" src="../assets/images/sina.png" alt="" />
+          </div>
         </div>
         <img
           v-if="data.workoutType === 'cardio'"
@@ -254,22 +266,22 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
-import { supabase } from "../supabase/init"
-import { useRoute, useRouter } from "vue-router"
-import store from "../store"
-import { uid } from "uid"
+import { ref, computed } from "vue";
+import { supabase } from "../supabase/init";
+import { useRoute, useRouter } from "vue-router";
+import store from "../store";
+import { uid } from "uid";
 
-const data = ref(null)
-const dataLoaded = ref(null)
-const errorMsg = ref(null)
-const statusMsg = ref(null)
-const route = useRoute()
-const router = useRouter()
-const user = computed(() => store.state.user)
+const data = ref(null);
+const dataLoaded = ref(null);
+const errorMsg = ref(null);
+const statusMsg = ref(null);
+const route = useRoute();
+const router = useRouter();
+const user = computed(() => store.state.user);
 
 // 获取当前路由页面的id
-const currentId = route.params.workoutId
+const currentId = route.params.workoutId;
 
 // 获取数据
 const getData = async () => {
@@ -277,25 +289,25 @@ const getData = async () => {
     const { data: workouts, error } = await supabase
       .from("workouts")
       .select("*")
-      .eq("id", currentId)
-    if (error) throw error
-    data.value = workouts[0]
+      .eq("id", currentId);
+    if (error) throw error;
+    data.value = workouts[0];
     // console.log(data.value[0].workoutName)
-    dataLoaded.value = true
+    dataLoaded.value = true;
   } catch (error) {
-    errorMsg.value = error.message
+    errorMsg.value = error.message;
     setTimeout(() => {
-      errorMsg.value = null
-    }, 5000)
+      errorMsg.value = null;
+    }, 5000);
   }
-}
-getData()
+};
+getData();
 
 // 编辑模式
-const edit = ref(null)
+const edit = ref(null);
 const editMode = () => {
-  edit.value = !edit.value
-}
+  edit.value = !edit.value;
+};
 
 // 删除整个运动记录
 const deleteWorkout = async () => {
@@ -303,16 +315,16 @@ const deleteWorkout = async () => {
     const { error } = await supabase
       .from("workouts")
       .delete()
-      .eq("id", currentId)
-    if (error) throw error
-    router.push({ name: "Home" })
+      .eq("id", currentId);
+    if (error) throw error;
+    router.push({ name: "Home" });
   } catch (error) {
-    errorMsg.value = `Error: ${error.message}`
+    errorMsg.value = `Error: ${error.message}`;
     setTimeout(() => {
-      errorMsg.value = false
-    }, 5000)
+      errorMsg.value = false;
+    }, 5000);
   }
-}
+};
 
 // Add exercise
 const addExercise = () => {
@@ -323,8 +335,8 @@ const addExercise = () => {
       sets: "",
       reps: "",
       weight: "",
-    })
-    return
+    });
+    return;
   }
   data.value.exercises.push({
     id: uid(),
@@ -332,22 +344,22 @@ const addExercise = () => {
     distance: "",
     duration: "",
     pace: "",
-  })
-}
+  });
+};
 
 // Delete exercise
 const deleteExercise = (id) => {
   if (data.value.exercises.length > 1) {
     data.value.exercises = data.value.exercises.filter(
       (exercise) => exercise.id !== id
-    )
-    return
+    );
+    return;
   }
-  errorMsg.value = "至少需要有一项运动记录"
+  errorMsg.value = "至少需要有一项运动记录";
   setTimeout(() => {
-    errorMsg.value = false
-  }, 5000)
-}
+    errorMsg.value = false;
+  }, 5000);
+};
 
 // 更新运动记录
 const update = async () => {
@@ -358,18 +370,54 @@ const update = async () => {
         workoutName: data.value.workoutName,
         exercises: data.value.exercises,
       })
-      .eq("id", currentId)
-    if (error) throw error
-    edit.value = false
-    statusMsg.value = "更新成功"
+      .eq("id", currentId);
+    if (error) throw error;
+    edit.value = false;
+    statusMsg.value = "更新成功";
     setTimeout(() => {
-      statusMsg.value = null
-    }, 5000)
+      statusMsg.value = null;
+    }, 5000);
   } catch (error) {
-    errorMsg.value = `错误：${error.message}`
+    errorMsg.value = `错误：${error.message}`;
     setTimeout(() => {
-      errorMsg.value = false
-    }, 5000)
+      errorMsg.value = false;
+    }, 5000);
   }
-}
+};
+
+// share Workout
+const shareWorkout = (shareWay) => {
+  if (shareWay === "QQ") {
+    //分享到QQ好友(PC端可用)
+    const share = {
+      title: "我爱运动",
+      desc: "快来和我一起分享运动记录~",
+      share_url: "https://active-tracker.onrender.com/",
+    };
+    location.replace(
+      "https://connect.qq.com/widget/shareqq/index.html?url=" +
+        encodeURIComponent(share.share_url) +
+        "&title=" +
+        share.title +
+        "&desc=" +
+        share.desc
+    );
+  } else {
+    const share = {
+      title: "我爱运动",
+      image_url: ["../assets/QQ.png"],
+      share_url: "https://active-tracker.onrender.com/",
+    };
+    //跳转地址
+    location.replace(
+      "https://service.weibo.com/share/share.php?url=" +
+        encodeURIComponent(share.share_url) +
+        "&title=" +
+        share.title +
+        "&pic=" +
+        share.image_url +
+        "&searchPic=true"
+    );
+  }
+};
 </script>
