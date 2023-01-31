@@ -30,16 +30,17 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import store from "../store"
-import { useRouter } from "vue-router"
-import { supabase } from "../supabase/init"
+import { computed } from "vue";
+import store from "../store";
+import { useRouter } from "vue-router";
+import { supabase } from "../supabase/init";
 
-const user = computed(() => store.state.user)
-const router = useRouter()
+const user = computed(() => store.state.user);
+const router = useRouter();
 
 const logout = async () => {
-  await supabase.auth.signOut()
-  router.push({ name: "Home" })
-}
+  await supabase.auth.signOut();
+  router.push({ name: "Home" });
+};
+
 </script>

@@ -3,7 +3,7 @@ import { supabase } from "../supabase/init";
 
 const routes = [
   {
-    path: "/",
+    path: "/home",
     name: "Home",
     component: () => import("../views/Home.vue"),
     meta: {
@@ -19,6 +19,7 @@ const routes = [
       title: "登录",
       auth: false,
     },
+    alias: "/",
   },
   {
     path: "/register",

@@ -50,30 +50,30 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { supabase } from "../supabase/init"
+import { ref } from "vue";
+import { supabase } from "../supabase/init";
 // 注册完后跳转到登录页面
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
 
-const email = ref(null)
-const password = ref(null)
-const errorMsg = ref(null)
+const email = ref("gmg417903@gmail.com");
+const password = ref("admin123");
+const errorMsg = ref(null);
 
-const router = useRouter()
+const router = useRouter();
 
 const login = async () => {
   try {
     const { error } = await supabase.auth.signIn({
       email: email.value,
       password: password.value,
-    })
-    if (error) throw error
-    router.push({ name: "Home" })
+    });
+    if (error) throw error;
+    router.push({ name: "Home" });
   } catch (error) {
-    errorMsg.value = `错误： ${error.message}`
+    errorMsg.value = `错误： ${error.message}`;
     setTimeout(() => {
-      errorMsg.value = null
-    }, 5000)
+      errorMsg.value = null;
+    }, 5000);
   }
-}
+};
 </script>
